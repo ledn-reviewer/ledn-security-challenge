@@ -1,8 +1,7 @@
 FROM node:22-slim
 WORKDIR /app
-COPY package.json ./
-# No lockfile is shipped; install resolves against the ranges in package.json.
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
 COPY tests ./tests

@@ -2,9 +2,7 @@
 #
 # This is a trimmed, representative slice of the fictional Ledn Token platform's
 # infrastructure. It is NOT applied anywhere; treat it as a design/config review.
-# Your job: determine whether an external attacker can reach customer data or the
-# token-signing secret, prove the path is REACHABLE (not just "a wildcard exists"),
-# and propose Terraform fixes that do not break legitimate edge traffic.
+# See README.md in this directory for the deliverable.
 
 terraform {
   required_providers {
@@ -13,10 +11,10 @@ terraform {
 }
 
 # --- Edge: Cloudflare fronts the API and injects a shared secret header --------
-# The origin is expected to only accept requests that carry this header.
+# The origin only accepts requests that carry this header.
 variable "edge_shared_secret" {
   type    = string
-  default = "cf-origin-2023-static-do-not-rotate" # (1) static, in-repo, never rotated
+  default = "cf-origin-shared-2023"
 }
 
 # --- Origin: the API service on EC2 -------------------------------------------
@@ -24,8 +22,6 @@ resource "aws_security_group" "api_origin" {
   name        = "ledn-token-api-origin"
   description = "API origin"
 
-  # (2) origin is reachable directly from the whole internet on the app port,
-  #     so a client can skip Cloudflare entirely.
   ingress {
     from_port   = 4000
     to_port     = 4000
@@ -45,8 +41,8 @@ resource "aws_instance" "api" {
   instance_type        = "t3.small"
   vpc_security_group_ids = [aws_security_group.api_origin.id]
   iam_instance_profile = aws_iam_instance_profile.api.name
-  # The app is configured to trust var.edge_shared_secret as proof that a request
-  # "came through Cloudflare" (see app env EDGE_SHARED_SECRET).
+  # The app trusts var.edge_shared_secret as proof that a request came through
+  # Cloudflare (see app env EDGE_SHARED_SECRET in terraform-plan.txt).
 }
 
 # --- Secret: the token-signing key --------------------------------------------
@@ -69,8 +65,6 @@ resource "aws_iam_role_policy" "api" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      # (3) far broader than the API needs: it can read EVERY secret in the account,
-      #     including the token-signing key.
       { Effect = "Allow", Action = ["secretsmanager:GetSecretValue"], Resource = "*" }
     ]
   })

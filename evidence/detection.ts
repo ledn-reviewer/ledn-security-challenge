@@ -2,11 +2,11 @@
 //
 // Implement `detect` to identify compromised accounts from the telemetry. Return
 // one alert per account you believe was taken over. You are scored on precision
-// and recall against a held-out ground truth (see evidence/README.md), plus your
-// written false-positive / evasion analysis.
+// and recall against private labels and additional cases, plus your written
+// false-positive / evasion analysis.
 //
 // This starter implementation is deliberately naive (it alerts on any login
-// failure) so you can see the harness run and score. Replace it.
+// failure) so you can see the runner execute. Replace it.
 
 export interface AuthEvent {
   ts: string;

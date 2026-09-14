@@ -14,9 +14,7 @@
     "build": "tsc -p tsconfig.json",
     "test": "vitest run tests",
     "test:watch": "vitest tests",
-    "reviewer:attack": "tsx reviewer/attack.ts",
-    "reviewer:regression": "vitest run reviewer/security-regression.spec.ts",
-    "reviewer:detections": "tsx evidence/replay-detections.ts"
+    "detection": "tsx evidence/run-detection.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^9.0.0",

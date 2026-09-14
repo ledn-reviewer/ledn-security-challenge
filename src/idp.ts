@@ -6,9 +6,6 @@ import { IDP_SIGNING_SECRET, IDP_ISSUER, IDP_AUDIENCE } from './config.js';
 //   - access:   issued after a successful password login
 //   - recovery: issued by the "account recovery" flow (would normally be emailed
 //               to the account owner as a one-time link) WITHOUT a password
-//
-// A correct API must distinguish these via `token_use`. This IdP behaves
-// correctly; the vulnerability (if any) lives in how the API validates tokens.
 
 export interface TokenClaims {
   sub: string; // account email

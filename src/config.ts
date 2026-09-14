@@ -23,8 +23,7 @@ export function candidateSeed(): number {
   return h.readUInt32BE(0) & 0x7fffffff;
 }
 
-// Deterministic per-candidate flag derivation. The reviewer re-derives the
-// expected flag with the same CANDIDATE_ID to grade a submission.
+// Deterministic per-candidate flag derivation for the local challenge instance.
 export function flag(kind: string): string {
   const mac = createHmac('sha256', `ledn-flag:${CANDIDATE_ID}`).update(kind).digest('hex');
   return `FLAG{${kind}-${mac.slice(0, 16)}}`;
@@ -36,5 +35,5 @@ export const CANARY_EMAIL = `canary+${CANDIDATE_ID}@ledn-token.example`;
 export const VICTIM_EMAIL = `victim+${CANDIDATE_ID}@ledn-token.example`;
 export const ATTACKER_EMAIL = `attacker+${CANDIDATE_ID}@ledn-token.example`;
 export const ATTACKER_PASSWORD = 'attacker-known-password';
-// The victim uses a weak, guessable password on purpose (credential-stuffing narrative).
+// Seeded password for the victim account.
 export const VICTIM_PASSWORD = 'Summer2024!';

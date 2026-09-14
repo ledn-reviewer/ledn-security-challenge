@@ -3,9 +3,6 @@ import { DATABASE_URL } from './config.js';
 
 export const pool = new pg.Pool({ connectionString: DATABASE_URL });
 
-// NOTE (challenge author): the schema deliberately has NO `CHECK (balance >= 0)`
-// constraint. A hardened version would add one; its absence is part of the
-// concurrency scenario, not an oversight in the harness.
 export async function initSchema(): Promise<void> {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS accounts (

@@ -15,6 +15,6 @@ No AWS account is needed — this is a config review.
 3. **Fixes.** Concrete Terraform changes that close the path **without breaking legitimate Cloudflare→origin traffic**. Explain the migration order.
 4. **Detection & containment.** One CloudTrail/edge signal you would alert on, and the immediate containment step.
 
-### What a strong answer notices
-
-The three weaknesses are individually survivable but fatal together: the origin security group is open to `0.0.0.0/0` on the app port (so Cloudflare can be bypassed), the origin's only proof-of-edge is a **static, in-repo** shared header (so bypassing the edge is trivial once you read `main.tf`), and the instance role can read **every** secret in the account (so a foothold on the origin yields the token-signing key → forge any user's tokens). A weak answer just greps for `Resource = "*"` or says "make the bucket private."
+We are interested in how the controls interact across the edge, origin, workload
+identity, and application—not a list of isolated configuration smells. State
+your assumptions and prioritize reachable paths with meaningful blast radius.

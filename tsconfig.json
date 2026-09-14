@@ -11,5 +11,5 @@
     "outDir": "dist",
     "types": ["node"]
   },
-  "include": ["src", "tests", "reviewer", "evidence"]
+  "include": ["src", "tests", "evidence"]
 }

@@ -39,5 +39,5 @@ Plan: 5 to add, 0 to change, 0 to destroy.
 
 # App runtime env (from the deployment pipeline, provided for context):
 #   PORT=4000
-#   EDGE_SHARED_SECRET=cf-origin-2023-static-do-not-rotate
+#   EDGE_SHARED_SECRET=cf-origin-shared-2023
 #   IDP_SIGNING_KEY_SECRET_ARN=arn:aws:secretsmanager:eu-west-1:111122223333:secret:ledn-token/idp-signing-key

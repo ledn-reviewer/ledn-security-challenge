@@ -1,28 +1,37 @@
-# Module D (optional) — Detection & incident reconstruction
+# Module D (optional) — Detection and incident reconstruction
 
 The security team captured telemetry from the day of a suspected incident:
 
-- [`auth-events.ndjson`](./auth-events.ndjson) — identity events (logins, failures, recovery-token issuance).
-- [`api-requests.ndjson`](./api-requests.ndjson) — application access log for `/transactions`.
+- [`auth-events.ndjson`](./auth-events.ndjson) — identity events such as logins,
+  failures, and recovery-token issuance.
+- [`api-requests.ndjson`](./api-requests.ndjson) — application access logs for
+  `/transactions`.
 
-There is normal customer traffic in here too — including benign lookalikes (a
-password-manager retry, a shared corporate NAT). Do not just "alert on anything
-unusual."
+The dataset includes normal customer traffic and benign lookalikes. A useful
+detection must distinguish suspicious sequences from ordinary retries or users
+sharing a network.
 
-### Deliverables
+## Deliverables
 
-1. **Incident reconstruction** — a timeline: how the account was compromised, which account(s), and what the attacker did afterwards. Name the entry technique.
-2. **Detection** — implement `detect()` in [`detection.ts`](./detection.ts). Return one alert per account you believe was taken over. Score it:
+1. **Incident reconstruction.** Provide a timestamped timeline explaining which
+   account or accounts were compromised, the likely entry technique, and what
+   happened afterward. Separate observed facts from your inferences.
+2. **Detection.** Replace the starter `detect()` implementation in
+   [`detection.ts`](./detection.ts). Return one alert per account you believe was
+   taken over, with a reason that explains the correlated signals.
+3. **Validation.** Add focused tests or test fixtures that demonstrate why your
+   rule catches the malicious sequence without alerting on the benign patterns
+   you identified. You can inspect your output with:
 
+   ```bash
+   make detection
    ```
-   make replay-detections      # prints precision / recall / F1 vs held-out ground truth
-   ```
 
-   The starter implementation is intentionally naive and will score poorly — replace it.
-3. **False positives & evasion** — which benign patterns would a crude rule misfire on, and how would an attacker evade *your* rule?
-4. **Response** — the immediate containment actions and the one durable control you would add.
+4. **False positives and evasion.** Explain which legitimate patterns a crude
+   rule would misclassify and how an attacker could evade your rule.
+5. **Response.** Describe the immediate containment actions and one durable
+   control you would add.
 
-`ground-truth.json` holds the labels the harness scores against. In a real
-sitting each candidate receives a different dataset (regenerate with
-`CANDIDATE_ID=<id> npx tsx evidence/generate-evidence.ts`), so memorised answers
-do not transfer.
+We evaluate signal selection, correlation, precision/recall reasoning, and the
+quality of the response plan against private labels and additional cases. The
+expected answer is not included in this repository.

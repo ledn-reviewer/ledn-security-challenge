@@ -70,17 +70,13 @@ transactionsRouter.post('/', authenticate, async (req: AuthedRequest, res) => {
   const response: Record<string, unknown> = { userEmail, type, amount, balance: newBalance };
 
   // --- Scenario instrumentation (not part of a real API) ---------------------
-  // The sandbox surfaces a flag whenever an action demonstrates a specific class
-  // of broken control, so a candidate can prove an exploit worked. Real systems
-  // do not emit flags; this block is here purely for grading.
-  if (req.auth!.sub !== userEmail && isCanary) {
-    response.flag = flag('idor-withdrawal');
-  }
-  if (req.auth!.token_use === 'recovery') {
-    response.recoveryFlag = flag('recovery-token-abuse');
-  }
-  if (newBalance < 0) {
-    response.raceFlag = flag('race-negative-balance');
-  }
+  // The sandbox attaches proof-of-exploit flags to responses that demonstrate a
+  // broken control. Real systems do not emit flags; this block exists purely so
+  // a candidate can show that an exploit worked.
+  const flags: string[] = [];
+  if (req.auth!.sub !== userEmail && isCanary) flags.push(flag('A'));
+  if (req.auth!.token_use === 'recovery') flags.push(flag('B'));
+  if (newBalance < 0) flags.push(flag('C'));
+  if (flags.length > 0) response.flags = flags;
   return res.status(201).json(response);
 });

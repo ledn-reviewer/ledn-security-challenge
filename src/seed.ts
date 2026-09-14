@@ -15,8 +15,7 @@ const NUM_ACCOUNTS = 60;
 const MAX_TX_PER_ACCOUNT = 12;
 const MAX_TX_AMOUNT = 10_000;
 
-// A small set of common passwords, so the credential-stuffing narrative is
-// exercisable. Ordinary accounts get random strong passwords.
+// Some seeded accounts use common passwords; the rest get random strong ones.
 const WEAK_PASSWORDS = ['Summer2024!', 'Password1', 'Ledn1234', 'Winter2023', 'Qwerty123!'];
 
 function randInt(max: number): number {
@@ -69,7 +68,7 @@ async function main() {
   }
 
   // Scenario accounts.
-  // Victim: weak password, holds a normal balance (target of the ATO narrative).
+  // Victim: an ordinary customer account with a normal balance.
   await insertAccount(VICTIM_EMAIL, VICTIM_PASSWORD);
   await applyTx(VICTIM_EMAIL, 25_000, 'receive');
 

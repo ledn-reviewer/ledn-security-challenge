@@ -1,7 +1,9 @@
+-include .env
+
 CANDIDATE_ID ?= demo
 export CANDIDATE_ID
 
-.PHONY: help up down seed logs test attack security-regression replay-detections reset
+.PHONY: help up down seed logs test detection reset
 
 help:
 	@echo "Ledn Token — Security Challenge"
@@ -11,13 +13,9 @@ help:
 	@echo "  make seed               # (re)load the synthetic dataset for CANDIDATE_ID"
 	@echo "  make down               # stop everything"
 	@echo "  make test               # run the starter test suite"
+	@echo "  make detection          # optional: run Module D detection against supplied logs"
 	@echo ""
-	@echo "Reviewer targets (see reviewer/README.md):"
-	@echo "  make attack             # run the reference exploit, prints the flags"
-	@echo "  make security-regression  # property tests that must PASS on a fixed API"
-	@echo "  make replay-detections  # score a detection rule against the evidence logs"
-	@echo ""
-	@echo "Set CANDIDATE_ID=<id> on any target to use a specific dataset."
+	@echo "Set CANDIDATE_ID in .env or on a target to use a specific dataset."
 
 up:
 	docker compose up -d --build
@@ -39,14 +37,9 @@ reset: down up
 
 # --- local (non-docker) developer targets ---------------------------------
 test:
-	npm install >/dev/null 2>&1 || true
+	npm ci
 	npm test
 
-attack:
-	npm run reviewer:attack
-
-security-regression:
-	npm run reviewer:regression
-
-replay-detections:
-	npm run reviewer:detections
+detection:
+	npm ci
+	npm run detection
