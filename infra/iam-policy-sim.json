@@ -1,0 +1,24 @@
+{
+  "_comment": "Effective-permissions snapshot for the ledn-token-api-role (IAM policy simulator style). Use this to reason about blast radius; you do not need an AWS account.",
+  "principal": "arn:aws:iam::111122223333:role/ledn-token-api-role",
+  "evaluations": [
+    {
+      "action": "secretsmanager:GetSecretValue",
+      "resource": "arn:aws:secretsmanager:eu-west-1:111122223333:secret:ledn-token/idp-signing-key",
+      "decision": "allowed",
+      "matchedStatement": "ledn-token-api-policy/Statement[0] (Resource=*)"
+    },
+    {
+      "action": "secretsmanager:GetSecretValue",
+      "resource": "arn:aws:secretsmanager:eu-west-1:111122223333:secret:ledn-token/db-password",
+      "decision": "allowed",
+      "matchedStatement": "ledn-token-api-policy/Statement[0] (Resource=*)"
+    },
+    {
+      "action": "secretsmanager:GetSecretValue",
+      "resource": "arn:aws:secretsmanager:eu-west-1:111122223333:secret:payments/settlement-hmac",
+      "decision": "allowed",
+      "matchedStatement": "ledn-token-api-policy/Statement[0] (Resource=*)"
+    }
+  ]
+}

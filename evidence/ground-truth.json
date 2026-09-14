@@ -1,0 +1,17 @@
+{
+  "incidentWindow": [
+    "2026-08-12T11:00:00Z",
+    "2026-08-12T11:30:00Z"
+  ],
+  "compromisedAccounts": [
+    "victim+demo@ledn-token.example"
+  ],
+  "drainedAccounts": [
+    "canary+demo@ledn-token.example"
+  ],
+  "attackerSocketIp": "203.0.113.7",
+  "benignLookalikes": [
+    "user0+demo@ledn-token.example"
+  ],
+  "notes": "Credential stuffing via rotating X-Forwarded-For -> ATO of victim -> IDOR + recovery-token withdrawals from canary."
+}

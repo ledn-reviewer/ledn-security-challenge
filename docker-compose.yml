@@ -1,0 +1,28 @@
+# Self-contained local stack. Everything runs on your machine and binds only to
+# localhost. Nothing in this challenge connects to any Ledn system.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ledn
+      POSTGRES_PASSWORD: ledn
+      POSTGRES_DB: ledn_token
+    ports:
+      - '127.0.0.1:5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ledn -d ledn_token']
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://ledn:ledn@db:5432/ledn_token
+      CANDIDATE_ID: ${CANDIDATE_ID:-demo}
+    ports:
+      - '127.0.0.1:4000:4000'
+    depends_on:
+      db:
+        condition: service_healthy

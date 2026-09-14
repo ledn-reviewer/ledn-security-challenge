@@ -1,0 +1,43 @@
+# Trimmed `terraform plan` output for the module in main.tf (for review only).
+
+Terraform will perform the following actions:
+
+  # aws_security_group.api_origin will be created
+  + resource "aws_security_group" "api_origin" {
+      + name = "ledn-token-api-origin"
+      + ingress {
+          + from_port   = 4000
+          + to_port     = 4000
+          + protocol    = "tcp"
+          + cidr_blocks = ["0.0.0.0/0"]
+        }
+    }
+
+  # aws_instance.api will be created
+  + resource "aws_instance" "api" {
+      + iam_instance_profile   = "ledn-token-api-profile"
+      + vpc_security_group_ids = [ (known after apply) ]  # api_origin
+    }
+
+  # aws_iam_role_policy.api will be created
+  + resource "aws_iam_role_policy" "api" {
+      + policy = jsonencode(
+            {
+              + Statement = [
+                  + { Action = ["secretsmanager:GetSecretValue"], Effect = "Allow", Resource = "*" },
+                ]
+            }
+        )
+    }
+
+  # aws_secretsmanager_secret.idp_signing_key will be created
+  + resource "aws_secretsmanager_secret" "idp_signing_key" {
+      + name = "ledn-token/idp-signing-key"
+    }
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+
+# App runtime env (from the deployment pipeline, provided for context):
+#   PORT=4000
+#   EDGE_SHARED_SECRET=cf-origin-2023-static-do-not-rotate
+#   IDP_SIGNING_KEY_SECRET_ARN=arn:aws:secretsmanager:eu-west-1:111122223333:secret:ledn-token/idp-signing-key
